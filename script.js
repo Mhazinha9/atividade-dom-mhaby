@@ -17,3 +17,16 @@ function createTaskItem(Text) {
     return li;
 }
 
+</div>
+</script src='script.js'></script>
+</body>
+// captura do submit
+taskForm.addEventListener ('submit', function(e) {
+    e.preventDefault();
+    const text = taskInput.Value.trim();
+    if (!text) return;
+    const li = createTaskItem(text);
+    taskList.appendChild(li);
+    taskInput.value = '';
+    taskInput.focus();
+})
