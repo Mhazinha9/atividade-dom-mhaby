@@ -16,7 +16,7 @@ body{
 form {
     display: flex;
     gap: 8px;
-    margin-botton: 12px;
+    margin-bottom: 12px;
 }
 
 input[type="text"] {
