@@ -28,5 +28,58 @@ taskForm.addEventListener ('submit', function(e) {
     const li = createTaskItem(text);
     taskList.appendChild(li);
     taskInput.value = '';
-    taskInput.focus();
-})
+    // Delegação de eventos no <ul>
+taskList.addEventListener('click', function(e) {
+    const li = e.target.closest('li');
+    if (!li) return;
+    
+    // remover tarefa
+    if (e.target.classList.contains('delete-btn')) {
+        li.remove();
+        return;
+    }
+    
+    // marcar como concluída
+    if (e.target.tagName === 'SPAN') {
+        li.classList.toggle('completed');
+    }
+});
+
+let currentFilter = 'all';
+
+// Editar texto ao clicar duas vezes
+taskList.addEventListener('dblclick', function(e) {
+  if (e.target.tagName === 'SPAN') {
+    const span = e.target;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = span.textContent;
+    span.replaceWith(input);
+    input.focus();
+    input.addEventListener('blur', function() {
+      const newSpan = document.createElement('span');
+      newSpan.textContent = input.value.trim() || 'Sem título';
+      input.replaceWith(newSpan);
+    });
+  }
+});
+
+// Filtros
+document.querySelectorAll('.filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentFilter = btn.dataset.filter;
+    applyFilter();
+  });
+});
+
+function applyFilter() {
+  taskList.querySelectorAll('li').forEach(li => {
+    if (currentFilter === 'all') {
+      li.style.display = '';
+    } else if (currentFilter === 'active') {
+      li.style.display = li.classList.contains('completed') ? 'none' : '';
+    } else {
+      li.style.display = li.classList.contains('completed') ? '' : 'none';
+    }
+  });
+}
