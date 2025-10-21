@@ -18,7 +18,7 @@ function createTaskItem(Text) {
 }
 
 </div>
-</script src='script.js'></script>
+<script src='script.js'></script>
 </body>
 // captura do submit
 taskForm.addEventListener ('submit', function(e) {
