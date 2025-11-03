@@ -1,85 +1,97 @@
-//Seletores do dom
-const taskForm = document.getElementById('taskForm');
-const taskInput = document.getElementById('taskInput');
-const taskList = document.getElementById('teskList');
+document.addEventListener('DOMContentLoaded', function () {
+  const loginForm = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
 
-// Função que cria um <li> com texto e botão "Remover"
-function createTaskItem(Text) {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.textContent = text;
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = 'Remover';
-    deleteBtn.className = 'delete-Btn';
-    deleteBtn.type = 'button';
-    li.appendChild(span)
-    li.appendChild(deleteBtn);
-    return li;
+  // Validação do formulário
+  loginForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    // Validação básica
+    if (validateForm()) {
+      // Simulação de login bem-sucedido
+      alert('Login realizado com sucesso!');
+      // Aqui você normalmente faria uma requisição para o servidor
+      // loginForm.submit();
+    }
+  });
+
+  // Validação em tempo real
+  emailInput.addEventListener('blur', validateEmail);
+  passwordInput.addEventListener('blur', validatePassword);
+});
+
+function validateForm() {
+  const isEmailValid = validateEmail();
+  const isPasswordValid = validatePassword();
+
+  return isEmailValid && isPasswordValid;
 }
 
-</div>
-<script src='script.js'></script>
-</body>
-// captura do submit
-taskForm.addEventListener ('submit', function(e) {
-    e.preventDefault();
-    const text = taskInput.Value.trim();
-    if (!text) return;
-    const li = createTaskItem(text);
-    taskList.appendChild(li);
-    taskInput.value = '';
-    // Delegação de eventos no <ul>
-taskList.addEventListener('click', function(e) {
-    const li = e.target.closest('li');
-    if (!li) return;
-    
-    // remover tarefa
-    if (e.target.classList.contains('delete-btn')) {
-        li.remove();
-        return;
-    }
-    
-    // marcar como concluída
-    if (e.target.tagName === 'SPAN') {
-        li.classList.toggle('completed');
-    }
-});
+function validateEmail() {
+  const email = emailInput.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-let currentFilter = 'all';
-
-// Editar texto ao clicar duas vezes
-taskList.addEventListener('dblclick', function(e) {
-  if (e.target.tagName === 'SPAN') {
-    const span = e.target;
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = span.textContent;
-    span.replaceWith(input);
-    input.focus();
-    input.addEventListener('blur', function() {
-      const newSpan = document.createElement('span');
-      newSpan.textContent = input.value.trim() || 'Sem título';
-      input.replaceWith(newSpan);
-    });
+  if (email === '') {
+    showError(emailInput, 'E-mail é obrigatório');
+    return false;
+  } else if (!emailRegex.test(email)) {
+    showError(emailInput, 'E-mail inválido');
+    return false;
+  } else {
+    showSuccess(emailInput);
+    return true;
   }
-});
+}
+function validatePassword() {
+    const password = passwordInput.value.trim();
 
-// Filtros
-document.querySelectorAll('.filter').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentFilter = btn.dataset.filter;
-    applyFilter();
-  });
-});
-
-function applyFilter() {
-  taskList.querySelectorAll('li').forEach(li => {
-    if (currentFilter === 'all') {
-      li.style.display = '';
-    } else if (currentFilter === 'active') {
-      li.style.display = li.classList.contains('completed') ? 'none' : '';
+    if (password === '') {
+        showError(passwordInput, 'Senha é obrigatória');
+        return false;
+    } else if (password.length < 6) {
+        showError(passwordInput, 'Senha deve ter pelo menos 6 caracteres');
+        return false;
     } else {
-      li.style.display = li.classList.contains('completed') ? '' : 'none';
+        showSuccess(passwordInput);
+        return true;
     }
-  });
+}
+
+function showError(input, message) {
+    const inputGroup = input.parentElement;
+
+    // Remove classes de sucesso se existirem
+    input.classList.remove('success');
+
+    // Adiciona classes de erro
+    input.classList.add('error');
+
+    // Remove mensagens de erro anteriores
+const existingError = inputGroup.querySelector('.error-message');
+if (existingError) {
+    existingError.remove();
+}
+
+// Adiciona mensagem de erro
+const errorElement = document.createElement('div');
+errorElement.className = 'error-message';
+errorElement.innerText = message;
+inputGroup.appendChild(errorElement);
+}
+
+function showSuccess(input) {
+    const inputGroup = input.parentElement;
+
+    // Remove classes de erro se existirem
+    input.classList.remove('error');
+
+    // Adiciona classes de sucesso
+    input.classList.add('success');
+
+    // Remove mensagens de erro
+    const existingError = inputGroup.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
 }
