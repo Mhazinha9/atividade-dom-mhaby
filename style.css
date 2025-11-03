@@ -50,3 +50,17 @@ li.completed span {
     text-decoration: line-through;
     opacity: 0.6;
 }
+
+input-group input.error {
+    border-color: #e74c3c;
+}
+
+.input-group input.success {
+    border-color: #2ecc71;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 0.875em;
+    margin-top: 0.25em;
+}
